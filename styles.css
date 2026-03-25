@@ -360,8 +360,8 @@ header {
 
 .products-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1.25rem;
 }
 
 /* ══════════════════════════════════════════════════
@@ -400,7 +400,7 @@ header {
 /* Imagen */
 .product-img-wrap {
   width: 100%;
-  height: 220px;
+  height: 160px;
   overflow: hidden;
   position: relative;
   background: #111;
@@ -409,7 +409,9 @@ header {
 .product-img-wrap img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+  object-position: center;
+  padding: 10px;
   transition: transform 0.4s;
 }
 
@@ -417,7 +419,7 @@ header {
 
 .product-img-placeholder {
   width: 100%;
-  height: 220px;
+  height: 160px;
   position: relative;
   background: linear-gradient(135deg, #1c1c1c 0%, #222 100%);
   display: flex;
@@ -469,35 +471,35 @@ header {
 
 /* Body */
 .product-body {
-  padding: 1.25rem 1.4rem;
+  padding: 1rem 1.1rem;
   display: flex;
   flex-direction: column;
   flex: 1;
 }
 
 .product-sku {
-  font-size: 0.65rem;
+  font-size: 0.62rem;
   color: var(--cat-yellow);
   letter-spacing: 2px;
   font-weight: 600;
-  margin-bottom: 5px;
+  margin-bottom: 4px;
   text-transform: uppercase;
 }
 
 .product-title {
   font-family: 'Barlow Condensed', sans-serif;
   font-weight: 900;
-  font-size: 1.2rem;
+  font-size: 1.05rem;
   line-height: 1.15;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.4rem;
   text-transform: uppercase;
 }
 
 .product-desc {
-  font-size: 0.83rem;
+  font-size: 0.78rem;
   color: var(--gray);
-  line-height: 1.6;
-  margin-bottom: 1.1rem;
+  line-height: 1.5;
+  margin-bottom: 0.9rem;
   flex: 1;
 }
 
@@ -505,21 +507,21 @@ header {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  margin-bottom: 1.1rem;
-  padding-bottom: 1.1rem;
+  margin-bottom: 0.9rem;
+  padding-bottom: 0.9rem;
   border-bottom: 1px solid var(--steel);
 }
 
 .product-price {
   font-family: 'Barlow Condensed', sans-serif;
   font-weight: 900;
-  font-size: 2.2rem;
+  font-size: 1.8rem;
   color: var(--cat-yellow);
   line-height: 1;
 }
 
 .product-price sup {
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   color: var(--gray);
   font-weight: 400;
   vertical-align: super;
@@ -530,30 +532,30 @@ header {
 .stock-num {
   font-family: 'Barlow Condensed', sans-serif;
   font-weight: 900;
-  font-size: 1.4rem;
+  font-size: 1.2rem;
   color: var(--white);
   line-height: 1;
 }
 
 .stock-lbl {
-  font-size: 0.62rem;
+  font-size: 0.58rem;
   color: var(--gray);
   letter-spacing: 1px;
   text-transform: uppercase;
 }
 
 /* Botones de acción */
-.product-actions { display: flex; gap: 0.6rem; }
+.product-actions { display: flex; gap: 0.5rem; }
 
 .btn-cart {
   flex: 1;
   background: var(--cat-yellow);
   color: var(--black);
   border: none;
-  padding: 12px 14px;
+  padding: 10px 12px;
   font-family: 'Barlow Condensed', sans-serif;
   font-weight: 800;
-  font-size: 0.9rem;
+  font-size: 0.82rem;
   letter-spacing: 1.5px;
   text-transform: uppercase;
   cursor: pointer;
@@ -578,7 +580,7 @@ header {
   background: #25D366;
   color: #fff;
   border: none;
-  padding: 12px 13px;
+  padding: 10px 11px;
   cursor: pointer;
   border-radius: 2px;
   transition: background 0.2s;
@@ -589,7 +591,7 @@ header {
 }
 
 .btn-wa:hover { background: #1ebe5c; }
-.btn-wa svg { width: 17px; height: 17px; fill: #fff; }
+.btn-wa svg { width: 15px; height: 15px; fill: #fff; }
 
 /* ══════════════════════════════════════════════════
    CART SIDEBAR

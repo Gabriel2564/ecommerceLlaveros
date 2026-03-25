@@ -215,7 +215,7 @@
 <script>
 
 /* ── Configuración ─────────────────────────────────── */
-const WHATSAPP_NUMBER = '51948565471';
+const WHATSAPP_NUMBER = '51967734225';
 const ADMIN_USER      = 'admin';
 const ADMIN_PASS      = 'cat2024';   // ⚠ Cambiar antes de publicar
 
@@ -611,9 +611,11 @@ function updateCartDisplay() {
 
 async function checkout() {
   if (!cart.length) { showToast('⚠ Agrega productos primero'); return; }
-  const lines = cart.map(i => `• ${i.title} x${i.qty} = $${(i.price * i.qty).toFixed(2)}`).join('%0A');
+  const lines = cart.map(i => `• ${i.title} x${i.qty} = $${(i.price * i.qty).toFixed(2)}`).join('\n');
   const total = cart.reduce((s, c) => s + c.price * c.qty, 0);
-  const msg   = `🛒 *Pedido CAT Llaveros*%0A%0A${lines}%0A%0A💰 *Total: $${total.toFixed(2)} USD*%0A%0A¿Cómo deseas pagar?%0A• 💳 Visa / Mastercard%0A• 📱 Yape%0A• 📱 Plin%0A• 🏦 Depósito bancario`;
+  const msg = encodeURIComponent(
+    `*Pedido CAT Llaveros*\n\n${lines}\n\n*Total: $${total.toFixed(2)} USD*\n\n¿Como deseas pagar?\n▪️ Visa / Mastercard\n🟪 Yape\n🟩 Plin\n▪️ Deposito bancario`
+  );
   window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`, '_blank');
   cart = []; saveCart(); updateCartDisplay(); toggleCart();
   showToast('🎉 ¡Pedido enviado por WhatsApp!');
@@ -622,7 +624,7 @@ async function checkout() {
 function consultarWA(id) {
   const p   = allProducts.find(p => p.id === id);
   if (!p) return;
-  const msg = encodeURIComponent(`Hola, me interesa el llavero *${p.title}* (SKU: ${p.sku || 'N/A'}) a $${p.price.toFixed(2)} USD. ¿Está disponible?`);
+  const msg = encodeURIComponent(`Hola, me interesa el llavero *${p.title}* (SKU: ${p.sku || 'N/A'}) a $${p.price.toFixed(2)} USD. Esta disponible?`);
   window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`, '_blank');
 }
 
