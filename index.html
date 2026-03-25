@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CAT Llaveros — Ferreyros</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════
+     HEADER
+══════════════════════════════════════════════ -->
+<header>
+  <div class="logo">
+    <div class="logo-cat">CAT</div>
+    <div class="logo-sub">Llaveros</div>
+  </div>
+  <div class="header-right">
+    <a class="admin-link" href="#" onclick="openAdmin(event)">⚙ Admin</a>
+    <button class="cart-btn" onclick="toggleCart()">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+      </svg>
+      CARRITO
+      <div class="cart-count" id="cartCount">0</div>
+    </button>
+  </div>
+</header>
+
+<!-- ══════════════════════════════════════════════
+     HERO
+══════════════════════════════════════════════ -->
+<section class="hero">
+  <div class="hero-badge">COLECCIÓN OFICIAL FERREYROS</div>
+  <h1>LLAVEROS<br><span>CAT</span></h1>
+  <p>Réplicas oficiales Ferreyros. Cada pieza es una obra de ingeniería en miniatura.</p>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     PAYMENT BANNER
+══════════════════════════════════════════════ -->
+<div class="payment-banner">
+  <span class="pbl">Aceptamos:</span>
+  <div class="pay-chip">
+    <div class="pi pi-visa">VISA</div>
+    Visa
+  </div>
+  <div class="pay-chip">
+    <div class="pi pi-mc">
+      <div class="mc-c1"></div>
+      <div class="mc-c2"></div>
+    </div>
+    Mastercard
+  </div>
+  <div class="pay-chip">
+    <div class="pi pi-yape">Y</div>
+    Yape
+  </div>
+  <div class="pay-chip">
+    <div class="pi pi-plin">P</div>
+    Plin
+  </div>
+  <div class="pay-chip">
+    <span style="font-size:15px">🏦</span>
+    Depósito
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     TOOLBAR (filtros + ordenamiento)
+══════════════════════════════════════════════ -->
+<div class="toolbar">
+  <div class="toolbar-left">
+    <span class="tb-label">CATEGORÍA:</span>
+    <button class="filter-btn active" onclick="setFilter('all', this)">Todos</button>
+    <button class="filter-btn" onclick="setFilter('Micro CAT', this)">Micro CAT</button>
+    <button class="filter-btn" onclick="setFilter('Metal', this)">Metal</button>
+    <button class="filter-btn" onclick="setFilter('Microinyectado', this)">Microinyectado</button>
+    <button class="filter-btn" onclick="setFilter('disponible', this)">En Stock</button>
+  </div>
+  <div class="toolbar-right">
+    <span class="tb-label">ORDENAR:</span>
+    <select class="sort-select" onchange="setSort(this.value)">
+      <option value="random">Al azar</option>
+      <option value="price-asc">Precio: menor a mayor</option>
+      <option value="price-desc">Precio: mayor a menor</option>
+      <option value="popularity">Más populares</option>
+      <option value="stock-desc">Mayor stock</option>
+      <option value="stock-asc">Menor stock</option>
+    </select>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     CATÁLOGO
+══════════════════════════════════════════════ -->
+<div class="catalog" id="catalog">
+  <div class="loading">
+    <div class="spinner"></div>
+    <span style="font-family:'Barlow Condensed';letter-spacing:2px;text-transform:uppercase">
+      Cargando catálogo...
+    </span>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     FOOTER
+══════════════════════════════════════════════ -->
+<footer>
+  <div class="footer-cat">FERREYROS</div>
+  <div class="footer-info">
+    <p>Llaveros coleccionables CAT oficiales · Ferreyros Perú</p>
+    <p>📧 <a href="mailto:grupomerchandising@ferreyros.com.pe">grupomerchandising@ferreyros.com.pe</a></p>
+    <p>🌐 <a href="https://www.ferreyshop.com" target="_blank">www.ferreyshop.com</a></p>
+  </div>
+</footer>
+
+<!-- ══════════════════════════════════════════════
+     CARRITO (sidebar)
+══════════════════════════════════════════════ -->
+<div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
+<div class="cart-sidebar" id="cartSidebar">
+  <div class="cart-header">
+    <h2>🛒 Tu Carrito</h2>
+    <button class="close-btn" onclick="toggleCart()">✕</button>
+  </div>
+  <div class="cart-items" id="cartItemsList"></div>
+  <div class="cart-footer">
+    <div class="cart-pay-methods">
+      <div class="cpm">💳 Visa / Mastercard</div>
+      <div class="cpm"><span style="color:#6b2d8b">●</span> Yape</div>
+      <div class="cpm"><span style="color:#00a859">●</span> Plin</div>
+      <div class="cpm">🏦 Depósito</div>
+    </div>
+    <div class="cart-total">
+      <span class="cart-total-label">Total</span>
+      <span class="cart-total-amount" id="cartTotal">$0.00</span>
+    </div>
+    <button class="checkout-btn" onclick="checkout()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+      </svg>
+      PEDIR POR WHATSAPP
+    </button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     ADMIN (overlay con login + panel)
+══════════════════════════════════════════════ -->
+<div class="admin-overlay" id="adminOverlay">
+
+  <!-- Login -->
+  <div class="login-box" id="loginBox">
+    <h2>🔐 Admin</h2>
+    <p>Acceso restringido solo para administradores.</p>
+    <div class="login-field">
+      <label>Usuario</label>
+      <input type="text" id="loginUser" placeholder="admin" autocomplete="off"/>
+    </div>
+    <div class="login-field">
+      <label>Contraseña</label>
+      <input type="password" id="loginPass" placeholder="••••••••"
+             onkeydown="if(event.key==='Enter') doLogin()"/>
+    </div>
+    <div class="login-err" id="loginErr">Usuario o contraseña incorrectos</div>
+    <button class="login-btn" onclick="doLogin()">INGRESAR</button>
+    <button class="login-cancel" onclick="closeAdmin()">Cancelar</button>
+  </div>
+
+  <!-- Panel de administración -->
+  <div class="admin-panel" id="adminPanel" style="display:none">
+    <div class="admin-header">
+      <h2>⚙ Panel de Administración</h2>
+      <div class="admin-header-right">
+        <span class="saved-badge" id="savedBadge">✓ Guardado</span>
+        <button class="admin-save-btn" onclick="saveAdminChanges()">GUARDAR CAMBIOS</button>
+        <button class="close-btn" onclick="closeAdmin()">✕</button>
+      </div>
+    </div>
+    <div class="admin-body">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Producto</th>
+            <th>SKU</th>
+            <th>Precio (USD)</th>
+            <th>Stock</th>
+            <th>Destacado</th>
+          </tr>
+        </thead>
+        <tbody id="adminTableBody"></tbody>
+      </table>
+    </div>
+    <div class="admin-footer">
+      <span class="admin-footer-note">
+        Los cambios se guardan localmente. Conecta un backend para persistencia real.
+      </span>
+      <button class="admin-logout" onclick="doLogout()">CERRAR SESIÓN</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- ══════════════════════════════════════════════
+     JAVASCRIPT
+══════════════════════════════════════════════ -->
+<script>
+
+/* ── Configuración ─────────────────────────────────── */
+const WHATSAPP_NUMBER = '51948565471';
+const ADMIN_USER      = 'admin';
+const ADMIN_PASS      = 'cat2024';   // ⚠ Cambiar antes de publicar
+
+/* ── Estado ────────────────────────────────────────── */
+let allProducts   = [];
+let cart          = JSON.parse(localStorage.getItem('cat-cart') || '[]');
+let currentFilter = 'all';
+let currentSort   = 'random';
+let isLoggedIn    = false;
+
+/* ── Catálogo base con imágenes ────────────────────── */
+const BASE_PRODUCTS = [
+  {
+    id: '1', cat: 'Micro CAT',
+    title: 'CAT Micro 320 KEY',
+    description: 'Llavero miniatura CAT Micro 320. Pieza coleccionable oficial Ferreyros.',
+    price: 6.83, stock: 122, popularity: 85,
+    sku: 'MI:85981',
+    image: 'img/CAT MICRO 320 KEY.png'
+  },
+  {
+    id: '2', cat: 'Micro CAT',
+    title: 'Cat Micro D8T Track-Type Tractor',
+    description: 'Réplica CAT Micro D8T Track-Type Tractor. Detalle a escala real.',
+    price: 6.83, stock: 110, popularity: 78,
+    sku: 'MI:85984',
+    image: 'img/Cat Micro D8T Track-Type Tractor Keycha.png'
+  },
+  {
+    id: '3', cat: 'Micro CAT',
+    title: 'Llavero Camión 770 CAT',
+    description: 'Llavero coleccionable camión 770 CAT. Diseño fiel al original.',
+    price: 6.83, stock: 86, popularity: 70,
+    sku: 'MI:85985',
+    image: 'img/LLAVERO CAMION 770 85985 CAT.png'
+  },
+  {
+    id: '4', cat: 'Micro CAT',
+    title: 'Llavero Cargador Ruedas 950M CAT',
+    description: 'Llavero cargador de ruedas 950M CAT. Pieza coleccionable oficial.',
+    price: 6.83, stock: 88, popularity: 65,
+    sku: 'MI:85986',
+    image: 'img/LLAVERO CARGADOR RUEDAS 950M 85986 CAT.png'
+  },
+  {
+    id: '5', cat: 'Metal',
+    title: 'Llavero Metal CAT Tractor',
+    description: 'Llavero metálico tractor CAT. Acabado premium en metal resistente.',
+    price: 6.75, stock: 184, popularity: 90,
+    sku: 'ML:FS0101LLMTC',
+    image: 'img/LLAVERO METAL CAT TRACTOR.png'
+  },
+  {
+    id: '6', cat: 'Metal',
+    title: 'Llavero Metal Excavadora',
+    description: 'Llavero metálico excavadora CAT. Réplica detallada en metal fundido.',
+    price: 6.75, stock: 10, popularity: 60,
+    sku: 'ML:FS096LLME',
+    image: 'img/LLAV MET EXCAVADO.png'
+  },
+  {
+    id: '7', cat: 'Metal',
+    title: 'Llavero Metal Cargador',
+    description: 'Llavero metálico cargador CAT. Durabilidad y detalle de coleccionista.',
+    price: 6.75, stock: 8, popularity: 55,
+    sku: 'ML:FS097LLMC',
+    image: 'img/LLAV MET CARGADOR.png'
+  },
+  {
+    id: '8', cat: 'Metal',
+    title: 'Llavero Camión Metal',
+    description: 'Llavero camión CAT en metal. Edición exclusiva Ferreyros.',
+    price: 6.75, stock: 0, popularity: 40,
+    sku: 'ML:FS066LLZCC',
+    image: 'img/LLAVERO CAMION.png'
+  },
+  {
+    id: '9', cat: 'Microinyectado',
+    title: 'Llavero Casco Destapador CAT',
+    description: 'Llavero casco destapador Ferreyros CAT. Funcional y coleccionable.',
+    price: 1.20, stock: 498, popularity: 95,
+    sku: 'ML:MAK127LCDF',
+    image: 'img/LLAVERO CASCO DESTAPADOR FERREYROS CAT.png'
+  },
+  {
+    id: '10', cat: 'Microinyectado',
+    title: 'Llavero Lofly',
+    description: 'Llavero Lofly CAT. Diseño exclusivo edición limitada.',
+    price: 5.40, stock: 0, popularity: 50,
+    sku: 'ML:1379',
+    image: 'img/Llavero Lofly.png'
+  },
+  {
+    id: '11', cat: 'Microinyectado',
+    title: 'Llavero Herr CAT NEG',
+    description: 'Llavero herramienta CAT negro. Incluye tijera, desarmador, lija y cuchilla.',
+    price: 5.45, stock: 0, popularity: 45,
+    sku: 'ML:LLAVERONEGROCAT',
+    image: 'img/LLAVERO HERR CAT NEG 1TIJ 1DES 1LIJA 1CU.png'
+  },
+  {
+    id: '12', cat: 'Microinyectado',
+    title: 'Llavero Microinyectado FER',
+    description: 'Llavero microinyectado robot Ferreyros. Edición especial FER.',
+    price: 3.19, stock: 342, popularity: 88,
+    sku: 'ML:MAKMILLAVFER',
+    image: 'img/LLAVERO MICROINYECTADO FER.png'
+  },
+  {
+    id: '13', cat: 'Microinyectado',
+    title: 'Llavero Microinyectado Camión',
+    description: 'Llavero microinyectado camión CAT. Colorido, resistente y ligero.',
+    price: 1.77, stock: 157, popularity: 72,
+    sku: 'ML:MAKMILLAVCAM',
+    image: 'img/LLAVERO MICROINYECTADO CAMIÓN.png'
+  },
+  {
+    id: '14', cat: 'Microinyectado',
+    title: 'Llavero Microinyectado Cargador',
+    description: 'Llavero microinyectado cargador CAT. Ideal para coleccionistas.',
+    price: 1.77, stock: 243, popularity: 68,
+    sku: 'ML:MAKMILLAVCAR',
+    image: 'img/LLAVERO MICROINYECTADO CARGADOR.png'
+  },
+  {
+    id: '15', cat: 'Microinyectado',
+    title: 'Llavero Microinyectado Excavadora',
+    description: 'Llavero microinyectado excavadora CAT. Alta fidelidad de diseño.',
+    price: 1.77, stock: 311, popularity: 75,
+    sku: 'ML:MAKMILLAVEXC',
+    image: 'img/LLAVERO MICROINYECTADO EXCAVADORA.png'
+  },
+  {
+    id: '16', cat: 'Microinyectado',
+    title: 'Llavero Microinyectado Tractor',
+    description: 'Llavero microinyectado tractor CAT. Pieza oficial Ferreyros.',
+    price: 1.77, stock: 181, popularity: 71,
+    sku: 'ML:MAKMILLAVTRA',
+    image: 'img/LLAVERO MICROINYECTADO TRACTOR.png'
+  },
+];
+
+/* ── Helpers ───────────────────────────────────────── */
+function getIcon(title) {
+  const t = title.toLowerCase();
+  if (t.includes('excavad'))                      return '⛏️';
+  if (t.includes('camión') || t.includes('camion')) return '🚚';
+  if (t.includes('cargador'))                     return '🚜';
+  if (t.includes('tractor'))                      return '🚛';
+  if (t.includes('casco'))                        return '⛑️';
+  if (t.includes('fer') || t.includes('robot'))   return '🤖';
+  if (t.includes('d8t') || t.includes('320'))     return '🏗️';
+  if (t.includes('herr'))                         return '🔧';
+  if (t.includes('lofly'))                        return '🔑';
+  return '🔑';
+}
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function getSectionTitle() {
+  if (currentFilter === 'disponible')  return 'EN STOCK';
+  if (currentFilter !== 'all')         return currentFilter.toUpperCase();
+  if (currentSort === 'price-asc' || currentSort === 'price-desc') return 'POR PRECIO';
+  if (currentSort === 'popularity')    return 'MÁS POPULARES';
+  if (currentSort.includes('stock'))   return 'POR STOCK';
+  return 'CATÁLOGO';
+}
+
+/* ── Init ──────────────────────────────────────────── */
+async function init() {
+  try {
+    const res  = await fetch('/api/products');
+    const data = await res.json();
+    allProducts = data.products.map(p => {
+      const base = BASE_PRODUCTS.find(b => b.id === p.id) || {};
+      return { ...base, ...p };
+    });
+  } catch {
+    const saved = localStorage.getItem('cat-products');
+    allProducts  = saved ? JSON.parse(saved) : [...BASE_PRODUCTS];
+  }
+  renderCatalog();
+  updateCartDisplay();
+}
+
+/* ── Render catálogo ───────────────────────────────── */
+function renderCatalog() {
+  const catalog = document.getElementById('catalog');
+  let products  = [...allProducts];
+
+  // Filtro
+  if (currentFilter === 'disponible')   products = products.filter(p => p.stock > 0);
+  else if (currentFilter !== 'all')     products = products.filter(p => p.cat === currentFilter);
+
+  // Orden
+  if      (currentSort === 'random')      products = shuffle(products);
+  else if (currentSort === 'price-asc')   products.sort((a, b) => a.price - b.price);
+  else if (currentSort === 'price-desc')  products.sort((a, b) => b.price - a.price);
+  else if (currentSort === 'popularity')  products.sort((a, b) => (b.popularity || 0) - (a.popularity || 0));
+  else if (currentSort === 'stock-desc')  products.sort((a, b) => b.stock - a.stock);
+  else if (currentSort === 'stock-asc')   products.sort((a, b) => a.stock - b.stock);
+
+  if (!products.length) {
+    catalog.innerHTML = `
+      <div style="text-align:center;padding:4rem;color:var(--gray)">
+        <p style="font-family:'Barlow Condensed';font-size:1.5rem;letter-spacing:2px">SIN RESULTADOS</p>
+      </div>`;
+    return;
+  }
+
+  // Con filtro/orden activo → sección única
+  if (currentSort !== 'random' || currentFilter !== 'all') {
+    catalog.innerHTML = `
+      <div class="cat-section">
+        <div class="cat-section-header">
+          <div class="cat-section-title">${getSectionTitle()}</div>
+          <span class="cat-section-count">${products.length} producto${products.length !== 1 ? 's' : ''}</span>
+        </div>
+        <div class="products-grid">
+          ${products.map((p, i) => cardHTML(p, i)).join('')}
+        </div>
+      </div>`;
+    return;
+  }
+
+  // Sin filtro → secciones por categoría
+  const categories = ['Micro CAT', 'Metal', 'Microinyectado'];
+  catalog.innerHTML = categories.map(cat => {
+    const group = products.filter(p => p.cat === cat);
+    if (!group.length) return '';
+    return `
+      <div class="cat-section">
+        <div class="cat-section-header">
+          <div class="cat-section-title">${cat}</div>
+          <span class="cat-section-count">${group.length} productos</span>
+        </div>
+        <div class="products-grid">
+          ${group.map((p, i) => cardHTML(p, i)).join('')}
+        </div>
+      </div>`;
+  }).join('');
+}
+
+/* ── HTML de una tarjeta ───────────────────────────── */
+function cardHTML(p, i) {
+  const sc     = p.stock === 0 ? 'sf-out' : p.stock <= 10 ? 'sf-low' : 'sf-in';
+  const st     = p.stock === 0 ? 'AGOTADO' : p.stock <= 10 ? `ÚLTIMAS ${p.stock}` : 'DISPONIBLE';
+  const inCart = cart.find(c => c.id === p.id);
+  const popW   = p.popularity || 50;
+  const delay  = Math.min(i, 8) * 0.05;
+
+  const imageHTML = p.image
+    ? `<div class="product-img-wrap">
+         <img src="${p.image}" alt="${p.title}" loading="lazy"
+              onerror="this.parentElement.innerHTML=fallbackImg('${p.id}','${sc}','${st}',${popW})"/>
+         <span class="stock-float ${sc}">${st}</span>
+         <div class="popularity-bar">
+           <div class="popularity-fill" style="width:${popW}%"></div>
+         </div>
+       </div>`
+    : `<div class="product-img-placeholder">
+         <div class="ph-icon">${getIcon(p.title)}</div>
+         <div class="ph-text">Imagen próximamente</div>
+         <span class="stock-float ${sc}">${st}</span>
+         <div class="popularity-bar">
+           <div class="popularity-fill" style="width:${popW}%"></div>
+         </div>
+       </div>`;
+
+  return `
+  <div class="product-card" style="animation-delay:${delay}s">
+    ${imageHTML}
+    <div class="product-body">
+      <div class="product-sku">SKU: ${p.sku || ''}</div>
+      <div class="product-title">${p.title}</div>
+      <div class="product-desc">${p.description || ''}</div>
+      <div class="product-meta">
+        <div class="product-price">
+          <sup>US$</sup>${p.price.toFixed(2)}
+        </div>
+        <div class="product-stock-info">
+          <div class="stock-num">${p.stock > 0 ? p.stock : '—'}</div>
+          <div class="stock-lbl">en stock</div>
+        </div>
+      </div>
+      <div class="product-actions">
+        <button class="btn-cart" onclick="addToCart('${p.id}')" ${p.stock === 0 ? 'disabled' : ''}>
+          ${p.stock === 0 ? '✕ AGOTADO' : inCart ? `✓ EN CARRITO (${inCart.qty})` : '+ AGREGAR'}
+        </button>
+        <button class="btn-wa" title="Consultar por WhatsApp" onclick="consultarWA('${p.id}')">
+          <svg viewBox="0 0 24 24">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function fallbackImg(id, sc, st, popW) {
+  const p = allProducts.find(p => p.id === id);
+  const icon = p ? getIcon(p.title) : '🔑';
+  return `<div class="ph-icon">${icon}</div>
+          <div class="ph-text">Imagen próximamente</div>
+          <span class="stock-float ${sc}">${st}</span>
+          <div class="popularity-bar"><div class="popularity-fill" style="width:${popW}%"></div></div>`;
+}
+
+/* ── Filtro y ordenamiento ─────────────────────────── */
+function setFilter(f, btn) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderCatalog();
+}
+
+function setSort(s) {
+  currentSort = s;
+  renderCatalog();
+}
+
+/* ── Carrito ───────────────────────────────────────── */
+function addToCart(id) {
+  const p = allProducts.find(p => p.id === id);
+  if (!p) return;
+  const ex = cart.find(c => c.id === id);
+  if (ex) ex.qty++;
+  else cart.push({ id: p.id, title: p.title, price: p.price, qty: 1 });
+  saveCart();
+  renderCatalog();
+  updateCartDisplay();
+  showToast(`✓ ${p.title} agregado`);
+}
+
+function updateQty(id, delta) {
+  const item = cart.find(c => c.id === id);
+  if (!item) return;
+  item.qty += delta;
+  if (item.qty <= 0) cart = cart.filter(c => c.id !== id);
+  saveCart();
+  updateCartDisplay();
+  renderCatalog();
+}
+
+function removeFromCart(id) {
+  cart = cart.filter(c => c.id !== id);
+  saveCart();
+  updateCartDisplay();
+  renderCatalog();
+}
+
+function saveCart() { localStorage.setItem('cat-cart', JSON.stringify(cart)); }
+
+function updateCartDisplay() {
+  const total = cart.reduce((s, c) => s + c.price * c.qty, 0);
+  document.getElementById('cartCount').textContent  = cart.reduce((s, c) => s + c.qty, 0);
+  document.getElementById('cartTotal').textContent  = `$${total.toFixed(2)}`;
+
+  const list = document.getElementById('cartItemsList');
+  if (!cart.length) {
+    list.innerHTML = `
+      <div class="empty-cart">
+        <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" opacity="0.3">
+          <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+          <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+        </svg>
+        <p>Tu carrito está vacío</p>
+      </div>`;
+    return;
+  }
+
+  list.innerHTML = cart.map(item => `
+    <div class="cart-item">
+      <div class="cart-item-info">
+        <div class="cart-item-title">${item.title}</div>
+        <div class="cart-item-price">$${(item.price * item.qty).toFixed(2)} USD</div>
+        <div class="cart-item-qty">
+          <button class="qty-btn" onclick="updateQty('${item.id}', -1)">−</button>
+          <span class="qty-num">${item.qty}</span>
+          <button class="qty-btn" onclick="updateQty('${item.id}', 1)">+</button>
+        </div>
+      </div>
+      <button class="remove-item" onclick="removeFromCart('${item.id}')">✕</button>
+    </div>`).join('');
+}
+
+async function checkout() {
+  if (!cart.length) { showToast('⚠ Agrega productos primero'); return; }
+  const lines = cart.map(i => `• ${i.title} x${i.qty} = $${(i.price * i.qty).toFixed(2)}`).join('%0A');
+  const total = cart.reduce((s, c) => s + c.price * c.qty, 0);
+  const msg   = `🛒 *Pedido CAT Llaveros*%0A%0A${lines}%0A%0A💰 *Total: $${total.toFixed(2)} USD*%0A%0A¿Cómo deseas pagar?%0A• 💳 Visa / Mastercard%0A• 📱 Yape%0A• 📱 Plin%0A• 🏦 Depósito bancario`;
+  window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`, '_blank');
+  cart = []; saveCart(); updateCartDisplay(); toggleCart();
+  showToast('🎉 ¡Pedido enviado por WhatsApp!');
+}
+
+function consultarWA(id) {
+  const p   = allProducts.find(p => p.id === id);
+  if (!p) return;
+  const msg = encodeURIComponent(`Hola, me interesa el llavero *${p.title}* (SKU: ${p.sku || 'N/A'}) a $${p.price.toFixed(2)} USD. ¿Está disponible?`);
+  window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`, '_blank');
+}
+
+function toggleCart() {
+  document.getElementById('cartOverlay').classList.toggle('open');
+  document.getElementById('cartSidebar').classList.toggle('open');
+}
+
+/* ── Admin ─────────────────────────────────────────── */
+function openAdmin(e) {
+  e && e.preventDefault();
+  document.getElementById('adminOverlay').classList.add('open');
+  if (isLoggedIn) showAdminPanel();
+  else {
+    document.getElementById('loginBox').style.display    = 'block';
+    document.getElementById('adminPanel').style.display  = 'none';
+  }
+}
+
+function closeAdmin() {
+  document.getElementById('adminOverlay').classList.remove('open');
+  document.getElementById('loginUser').value = '';
+  document.getElementById('loginPass').value = '';
+  document.getElementById('loginErr').style.display = 'none';
+}
+
+function doLogin() {
+  const u = document.getElementById('loginUser').value.trim();
+  const p = document.getElementById('loginPass').value;
+  if (u === ADMIN_USER && p === ADMIN_PASS) {
+    isLoggedIn = true;
+    showAdminPanel();
+  } else {
+    document.getElementById('loginErr').style.display = 'block';
+    document.getElementById('loginPass').value = '';
+  }
+}
+
+function doLogout() { isLoggedIn = false; closeAdmin(); }
+
+function showAdminPanel() {
+  document.getElementById('loginBox').style.display   = 'none';
+  document.getElementById('adminPanel').style.display = 'flex';
+  renderAdminTable();
+}
+
+function renderAdminTable() {
+  document.getElementById('adminTableBody').innerHTML = allProducts.map(p => {
+    const sc = p.stock === 0 ? 'out' : p.stock <= 10 ? 'low' : 'ok';
+    return `
+    <tr data-id="${p.id}">
+      <td style="max-width:220px">
+        <div style="font-family:'Barlow Condensed';font-weight:700;font-size:0.9rem;text-transform:uppercase;line-height:1.2">${p.title}</div>
+        <div style="font-size:0.72rem;color:var(--gray);margin-top:2px">${p.cat}</div>
+      </td>
+      <td><span class="sku-tag">${p.sku || '—'}</span></td>
+      <td>
+        <input class="admin-input price-input" type="number" step="0.01" min="0"
+               value="${p.price.toFixed(2)}" data-field="price" data-id="${p.id}"/>
+      </td>
+      <td>
+        <input class="admin-input stock-input" type="number" min="0"
+               value="${p.stock}" data-field="stock" data-id="${p.id}"/>
+        <span class="stock-tag ${sc}" style="margin-left:6px">${p.stock}</span>
+      </td>
+      <td style="text-align:center">
+        <button class="featured-toggle ${p.featured ? 'on' : ''}"
+                onclick="toggleFeatured('${p.id}', this)"
+                title="${p.featured ? 'Destacado' : 'No destacado'}">
+        </button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function toggleFeatured(id, btn) {
+  const p = allProducts.find(p => p.id === id);
+  if (!p) return;
+  p.featured = !p.featured;
+  btn.classList.toggle('on');
+}
+
+function saveAdminChanges() {
+  document.querySelectorAll('#adminTableBody input').forEach(input => {
+    const p = allProducts.find(p => p.id === input.dataset.id);
+    if (!p) return;
+    if (input.dataset.field === 'price') p.price = parseFloat(input.value) || p.price;
+    if (input.dataset.field === 'stock') p.stock = parseInt(input.value) || 0;
+  });
+  localStorage.setItem('cat-products', JSON.stringify(allProducts));
+  const badge = document.getElementById('savedBadge');
+  badge.classList.add('show');
+  setTimeout(() => badge.classList.remove('show'), 2500);
+  renderAdminTable();
+  renderCatalog();
+  showToast('✓ Cambios guardados');
+}
+
+/* ── Toast ─────────────────────────────────────────── */
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+/* ── Arrancar ──────────────────────────────────────── */
+init();
+
+</script>
+</body>
+</html>
